@@ -42,11 +42,11 @@
         <!-- Barra de Búsqueda -->
         <div class="max-w-xl mx-auto mb-8">
             <div class="relative flex gap-2">
-                <input type="text" id="searchInput" class="w-full bg-gray-800 border-2 border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-cyan-500 transition-colors" placeholder="Busca una criptomoneda (ej: Bitcoin, ETH)...">
+                <input type="text" id="searchInput" class="w-full bg-gray-800 border-2 border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-cyan-500 transition-colors" placeholder="Busca una criptomoneda (ej: Kusama, Movr)...">
                 <button id="searchButton" class="bg-cyan-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-cyan-600 transition">Buscar</button>
             </div>
-             <div id="suggestions" class="relative w-full">
-                <div id="suggestions-list" class="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-700 rounded-lg hidden max-h-60 overflow-y-auto"></div>
+             <div id="suggestions-container" class="relative w-full">
+                <div id="suggestions-list" class="absolute z-20 w-full mt-1 bg-gray-800 border border-gray-700 rounded-lg hidden max-h-60 overflow-y-auto"></div>
              </div>
              <p id="error-message" class="text-red-400 text-sm mt-2 text-center hidden"></p>
         </div>
@@ -135,41 +135,51 @@
              </div>
              <div>
                 <h3 class="text-2xl font-semibold mb-4 text-white">3. Poder Adquisitivo: Dólar vs. Bitcoin</h3>
-                <p class="text-gray-400 mb-4">La verdadera medida de una moneda es qué puedes comprar. Usemos la metáfora de un **carro de supermercado**.</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                    <div class="bg-gray-700/50 p-4 rounded-lg">
-                        <h4 class="font-bold text-lg mb-2">2011</h4>
-                        <p class="text-sm flex items-center justify-center">🛒 **$100 USD:** Llenaban un carro hasta el tope.</p>
-                        <div class="flex items-center justify-center mt-2">
-                           <span class="text-sm mr-2">🛒</span>
-                           <div class="flex items-center">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-4 w-4" alt="Bitcoin logo">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-4 w-4 -ml-2" alt="Bitcoin logo">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-4 w-4 -ml-2" alt="Bitcoin logo">
-                                <span class="text-sm ml-1 font-bold">~100 BTC</span>
-                           </div>
+                <p class="text-gray-400 mb-4">¿Qué se podía comprar con el mismo valor inicial a lo largo del tiempo?</p>
+                <div class="space-y-6">
+                    <!-- 2010 -->
+                    <div class="p-4 rounded-lg bg-gray-700/50">
+                        <p class="font-bold text-lg">2010</p>
+                        <div class="mt-2 flex items-center gap-4">
+                            <div class="flex-shrink-0 w-1/4 text-center font-bold">$$$</div>
+                            <p class="text-sm flex-grow">Con ~$40 se compraban un par de pizzas grandes.</p>
+                        </div>
+                        <div class="mt-2 flex items-center gap-4">
+                             <div class="flex-shrink-0 w-1/4 text-center flex items-center justify-center">
+                                <img src="https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png?1696501400" class="h-5 w-5" alt="Bitcoin"><img src="https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png?1696501400" class="h-5 w-5 -ml-2" alt="Bitcoin"><img src="https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png?1696501400" class="h-5 w-5 -ml-2" alt="Bitcoin">
+                                <strong class="ml-1">10.000</strong>
+                             </div>
+                            <p class="text-sm flex-grow">Con 10.000 BTC se compraban... un par de pizzas grandes.</p>
                         </div>
                     </div>
-                     <div class="bg-gray-700/50 p-4 rounded-lg">
-                        <h4 class="font-bold text-lg mb-2">2017</h4>
-                        <p class="text-sm">🛒 **$100 USD:** Llenaban el carro con esfuerzo.</p>
-                         <div class="flex items-center justify-center mt-2 text-green-400">
-                           <span class="text-sm mr-2">🛒</span>
-                           <div class="flex items-center">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-5 w-5" alt="Bitcoin logo">
-                                <span class="text-sm ml-1 font-bold">~0.005 BTC</span>
-                           </div>
+                    <!-- 2017 -->
+                    <div class="p-4 rounded-lg bg-gray-700/50">
+                        <p class="font-bold text-lg">2017</p>
+                        <div class="mt-2 flex items-center gap-4">
+                            <div class="flex-shrink-0 w-1/4 text-center font-bold">$$</div>
+                             <p class="text-sm flex-grow">Con ~$20.000 se compraba un auto nuevo.</p>
+                        </div>
+                        <div class="mt-2 flex items-center gap-4">
+                             <div class="flex-shrink-0 w-1/4 text-center flex items-center justify-center">
+                                <img src="https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png?1696501400" class="h-5 w-5" alt="Bitcoin"><img src="https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png?1696501400" class="h-5 w-5 -ml-2" alt="Bitcoin">
+                                <strong class="ml-1">~1</strong>
+                            </div>
+                            <p class="text-sm flex-grow text-green-400">Con ~1 BTC te comprabas el mismo auto nuevo.</p>
                         </div>
                     </div>
-                     <div class="bg-gray-700/50 p-4 rounded-lg">
-                        <h4 class="font-bold text-lg mb-2">Hoy</h4>
-                        <p class="text-sm">🛒 **$100 USD:** Llenas medio carro, con suerte.</p>
-                        <div class="flex items-center justify-center mt-2 text-green-400">
-                           <span class="text-sm mr-2">🛒</span>
-                           <div class="flex items-center">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-6 w-6" alt="Bitcoin logo">
-                                <span class="text-sm ml-1 font-bold">&lt; 0.001 BTC</span>
-                           </div>
+                     <!-- Hoy -->
+                    <div class="p-4 rounded-lg bg-gray-700/50">
+                        <p class="font-bold text-lg">Hoy</p>
+                        <div class="mt-2 flex items-center gap-4">
+                            <div class="flex-shrink-0 w-1/4 text-center font-bold">$</div>
+                            <p class="text-sm flex-grow">Con ~$70.000 se compra un auto de gama alta.</p>
+                        </div>
+                        <div class="mt-2 flex items-center gap-4">
+                            <div class="flex-shrink-0 w-1/4 text-center flex items-center justify-center">
+                                <img src="https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png?1696501400" class="h-5 w-5" alt="Bitcoin">
+                                <strong class="ml-1">1</strong>
+                             </div>
+                            <p class="text-sm flex-grow text-green-400">Con 1 BTC te compras el mismo auto y te sobra para una casa.</p>
                         </div>
                     </div>
                 </div>
@@ -224,7 +234,7 @@
                     <div id="goal-result" class="mt-4 text-center hidden"></div>
                 </div>
 
-                 <!-- Calculadora de Rendimientos (NUEVA) -->
+                 <!-- Calculadora de Rendimientos -->
                 <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 md:col-span-2 lg:col-span-1">
                     <h3 class="text-xl font-semibold mb-4 text-white">Calculadora de Rendimientos (Yield)</h3>
                     <p class="text-sm text-gray-400 mb-4">Calcula cuánto podrías generar en un año con interés simple y compuesto.</p>
@@ -372,14 +382,14 @@
         };
 
         const popularCoins = [
+            { id: 'bitcoin', name: 'Bitcoin', logo: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400' },
+            { id: 'ethereum', name: 'Ethereum', logo: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501638' },
             { id: 'solana', name: 'Solana', logo: 'https://assets.coingecko.com/coins/images/4128/large/solana.png?1696504756' },
             { id: 'chainlink', name: 'Chainlink', logo: 'https://assets.coingecko.com/coins/images/877/large/chainlink-new-logo.png?1696502009' },
             { id: 'polkadot', name: 'Polkadot', logo: 'https://assets.coingecko.com/coins/images/12171/large/polkadot.png?1696512008' },
             { id: 'binancecoin', name: 'BNB', logo: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970' },
             { id: 'dogecoin', name: 'Dogecoin', logo: 'https://assets.coingecko.com/coins/images/5/large/dogecoin.png?1696501409' },
-            { id: 'floki', name: 'Floki', logo: 'https://assets.coingecko.com/coins/images/16746/large/floki-inu.png?1696516335' },
             { id: 'shiba-inu', name: 'Shiba Inu', logo: 'https://assets.coingecko.com/coins/images/11939/large/shiba.png?1696511800' },
-            { id: 'matic-network', name: 'Polygon', logo: 'https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png?1696505277' },
             { id: 'ripple', name: 'XRP', logo: 'https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442' },
             { id: 'uniswap', name: 'Uniswap', logo: 'https://assets.coingecko.com/coins/images/12504/large/uniswap-uni.png?1696512319' }
         ];
@@ -418,13 +428,31 @@
         async function showSuggestions(query, inputElement, containerElement) {
             if (!coinList.length) await getCoinList();
             
-            const filteredCoins = coinList.filter(coin => 
-                coin.name.toLowerCase().includes(query) || coin.symbol.toLowerCase().includes(query)
-            ).slice(0, 5);
-            
+             const queryLower = query.toLowerCase();
+            const filteredCoins = coinList
+                .map(coin => {
+                    const nameLower = coin.name.toLowerCase();
+                    const symbolLower = coin.symbol.toLowerCase();
+                    let score = 0;
+                    if (symbolLower === queryLower) {
+                        score = 100;
+                    } else if (nameLower === queryLower) {
+                        score = 90;
+                    } else if (nameLower.startsWith(queryLower)) {
+                        score = 50;
+                    } else if (symbolLower.startsWith(queryLower)) {
+                        score = 40;
+                    } else if (nameLower.includes(queryLower)) {
+                        score = 10;
+                    }
+                    return { ...coin, score };
+                })
+                .filter(coin => coin.score > 0)
+                .sort((a, b) => b.score - a.score);
+
             containerElement.innerHTML = '';
             if (filteredCoins.length > 0) {
-                filteredCoins.forEach(coin => {
+                filteredCoins.slice(0, 5).forEach(coin => {
                     const div = document.createElement('div');
                     div.className = "px-4 py-2 hover:bg-gray-700 cursor-pointer";
                     div.textContent = `${coin.name} (${coin.symbol.toUpperCase()})`;
@@ -689,6 +717,7 @@
             });
             
             const setupSearch = (input, suggestions) => {
+                if(!input) return;
                 input.addEventListener('input', (e) => {
                     clearTimeout(searchTimeout);
                     const query = e.target.value.toLowerCase();
@@ -702,17 +731,17 @@
             setupSearch(ui.flip.coinB, ui.flip.suggestionsB);
             setupSearch(ui.goal.coin, ui.goal.suggestions);
 
-            ui.searchButton.addEventListener('click', triggerSearch);
-            ui.searchInput.addEventListener('keydown', (event) => {
+            if(ui.searchButton) ui.searchButton.addEventListener('click', triggerSearch);
+            if(ui.searchInput) ui.searchInput.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
                     triggerSearch();
                 }
             });
 
-            ui.flip.button.addEventListener('click', handleFlipCalculation);
-            ui.goal.button.addEventListener('click', handleGoalCalculation);
-            ui.yield.button.addEventListener('click', handleYieldCalculation);
-            ui.copyButton.addEventListener('click', handleCopyAddress);
+            if(ui.flip.button) ui.flip.button.addEventListener('click', handleFlipCalculation);
+            if(ui.goal.button) ui.goal.button.addEventListener('click', handleGoalCalculation);
+            if(ui.yield.button) ui.yield.button.addEventListener('click', handleYieldCalculation);
+            if(ui.copyButton) ui.copyButton.addEventListener('click', handleCopyAddress);
         });
     </script>
 </body>
