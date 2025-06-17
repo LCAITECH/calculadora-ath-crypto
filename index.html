@@ -139,18 +139,38 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                     <div class="bg-gray-700/50 p-4 rounded-lg">
                         <h4 class="font-bold text-lg mb-2">2011</h4>
-                        <p class="text-sm">🛒 **$100 USD:** Llenaban un carro hasta el tope.</p>
-                        <p class="text-sm mt-2">🛒 **100 BTC (~$100):** Llenaban el mismo carro.</p>
+                        <p class="text-sm flex items-center justify-center">🛒 **$100 USD:** Llenaban un carro hasta el tope.</p>
+                        <div class="flex items-center justify-center mt-2">
+                           <span class="text-sm mr-2">🛒</span>
+                           <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-4 w-4" alt="Bitcoin logo">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-4 w-4 -ml-2" alt="Bitcoin logo">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-4 w-4 -ml-2" alt="Bitcoin logo">
+                                <span class="text-sm ml-1 font-bold">~100 BTC</span>
+                           </div>
+                        </div>
                     </div>
                      <div class="bg-gray-700/50 p-4 rounded-lg">
                         <h4 class="font-bold text-lg mb-2">2017</h4>
                         <p class="text-sm">🛒 **$100 USD:** Llenaban el carro con esfuerzo.</p>
-                        <p class="text-sm mt-2 text-green-400">🛒 **1 BTC (~$19k):** Comprabas el supermercado entero.</p>
+                         <div class="flex items-center justify-center mt-2 text-green-400">
+                           <span class="text-sm mr-2">🛒</span>
+                           <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-5 w-5" alt="Bitcoin logo">
+                                <span class="text-sm ml-1 font-bold">~0.005 BTC</span>
+                           </div>
+                        </div>
                     </div>
                      <div class="bg-gray-700/50 p-4 rounded-lg">
                         <h4 class="font-bold text-lg mb-2">Hoy</h4>
                         <p class="text-sm">🛒 **$100 USD:** Llenas medio carro, con suerte.</p>
-                        <p class="text-sm mt-2 text-green-400">🛒 **1 BTC (~$100k+):** Compras la cadena de supermercados.</p>
+                        <div class="flex items-center justify-center mt-2 text-green-400">
+                           <span class="text-sm mr-2">🛒</span>
+                           <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" class="h-6 w-6" alt="Bitcoin logo">
+                                <span class="text-sm ml-1 font-bold">&lt; 0.001 BTC</span>
+                           </div>
+                        </div>
                     </div>
                 </div>
              </div>
@@ -386,14 +406,9 @@
         async function getCoinList() {
             if (coinList.length > 0) return;
             try {
-                const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false');
+                const response = await fetch('https://api.coingecko.com/api/v3/coins/list?include_platform=false');
                 if (!response.ok) throw new Error('No se pudo cargar la lista de monedas.');
-                const marketData = await response.json();
-                coinList = marketData.map(coin => ({
-                    id: coin.id,
-                    name: coin.name,
-                    symbol: coin.symbol
-                }));
+                 coinList = await response.json();
             } catch (error) {
                 console.error("Error al obtener la lista de monedas:", error);
                 uiState.showError("No se pudo cargar la lista inicial de monedas. La búsqueda puede no funcionar.");
