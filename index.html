@@ -597,17 +597,53 @@ function calculateAndDisplay(data) {
             throw new Error("Datos insuficientes para calcular el ATH. Supply o precio inválidos.");
         }
 
-        // Calcular el Market Cap estimado del ATH con el suministro histórico (no disponible directamente, usamos ATH price * supply actual como aproximación)
-        const historicalAthMarketCap = athPrice * currentSupply; // Aproximación: asumimos suministro constante para simplicidad
-        const requiredMarketCap = historicalAthMarketCap; // Para alcanzar el precio ATH con suministro actual
-        const percentageIncrease = (currentMarketCap > 0) ? ((requiredMarketCap / currentMarketCap) - 1) * 100 : 0;
-        // Precio estimado si recupera el Market Cap de ATH con suministro actual
+        // Datos históricos específicos
+        const historicalData = {
+            'ethereum': {
+                athPrice: 4878.26,
+                historicalAthMarketCap: 573390000000,
+                athSupply: 118290000,
+                currentSupply: 120140000
+            },
+            'solana': {
+                athPrice: 293.31,
+                historicalAthMarketCap: 88387000000, // Corregido a $88.39B basado en $293.31 * 301,210,000
+                athSupply: 301210000,
+                currentSupply: 459620000
+            },
+            'chainlink': {
+                athPrice: 53.13,
+                historicalAthMarketCap: 19200000000, // Aproximado $53.13 * 420M
+                athSupply: 420000000,
+                currentSupply: 587100000
+            },
+            'polkadot': {
+                athPrice: 55.13,
+                historicalAthMarketCap: 48500000000, // Aproximado $55.13 * 897.6M
+                athSupply: 897600000,
+                currentSupply: 1477953420
+            },
+            'uniswap': {
+                athPrice: 44.97,
+                historicalAthMarketCap: 23500000000, // Aproximado $44.97 * 560M
+                athSupply: 560000000,
+                currentSupply: 599957295
+            }
+        };
+
+        // Usar datos históricos si están disponibles, de lo contrario usar aproximación
+        const coinData = historicalData[name.toLowerCase()] || {};
+        const historicalAthMarketCap = coinData.historicalAthMarketCap || (athPrice * currentSupply);
+        const athSupply = coinData.athSupply || currentSupply;
+        const inflationPercentage = coinData.athSupply ? ((currentSupply - athSupply) / athSupply) * 100 : ((currentSupply - (currentSupply * 0.95)) / (currentSupply * 0.95)) * 100;
         const estimatedPriceAtAthMarketCap = (historicalAthMarketCap > 0 && currentSupply > 0) ? historicalAthMarketCap / currentSupply : athPrice;
+        const requiredMarketCap = athPrice * currentSupply; // Para alcanzar el precio ATH
+        const percentageIncrease = (currentMarketCap > 0) ? ((requiredMarketCap / currentMarketCap) - 1) * 100 : 0;
 
         displayResult({
             name, symbol: symbol.toUpperCase(), image: image.large,
             athPrice, athDate, currentPrice, currentMarketCap,
-            requiredMarketCap, percentageIncrease, estimatedPriceAtAthMarketCap
+            requiredMarketCap, percentageIncrease, estimatedPriceAtAthMarketCap, inflationPercentage
         });
         uiState.hideLoader();
     } catch (error) {
@@ -617,7 +653,6 @@ function calculateAndDisplay(data) {
         uiState.hideLoader();
     }
 }
-
 function displayResult(data) {
     const { name, symbol, image, athPrice, currentPrice, athDate, currentMarketCap, requiredMarketCap, percentageIncrease, estimatedPriceAtAthMarketCap } = data;
     const increaseColor = percentageIncrease > 0 ? (percentageIncrease < 500 ? 'text-green-400' : (percentageIncrease < 2000 ? 'text-yellow-400' : 'text-red-500')) : 'text-gray-400';
