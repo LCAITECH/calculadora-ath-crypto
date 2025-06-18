@@ -22,6 +22,9 @@
         .hidden {
             display: none;
         }
+        #suggestions-list, #suggestions-flip-a, #suggestions-flip-b, #suggestions-goal {
+            z-index: 10; /* Asegurar que las sugerencias estén por encima de otros elementos */
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white font-sans">
@@ -29,7 +32,7 @@
         <h1 class="text-4xl font-bold text-center mb-6">Calculadora de Criptomonedas y Forex</h1>
 
         <!-- Búsqueda de Monedas -->
-        <div class="mb-6">
+        <div class="mb-6 relative">
             <div class="flex items-center gap-2">
                 <input type="text" id="searchInput" placeholder="Busca una moneda (ej. Bitcoin, Ethereum)..." class="w-full bg-gray-800 text-white border border-gray-700 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-cyan-500">
                 <button id="searchButton" class="bg-cyan-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-cyan-600 transition">Buscar</button>
@@ -106,7 +109,7 @@
         </div>
 
         <!-- Sección Lotaje Forex -->
-        <div id="lotaje-container" class="hidden bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto border border-gray-700 mt-6">
+        <div id="lotaje-container" class="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto border border-gray-700 mt-6">
             <h2 class="text-2xl font-bold text-white mb-4">Calculadora de Lotaje Forex</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -144,7 +147,7 @@
                     <input type="number" id="lotaje-stop-loss" class="w-full bg-gray-700 text-white border border-gray-600 rounded-lg p-2" placeholder="Ej. 20">
                 </div>
             </div>
-            <button id="lotaje-swap-button" class="mt-4 bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-500 transition">Swap with Money</button>
+            <button id="lotaje-swap-button" class="mt-4 bg-cyan-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-cyan-600 transition">Calcular Lotaje</button>
             <div id="lotaje-result" class="mt-4 text-white hidden"></div>
         </div>
 
@@ -663,7 +666,7 @@
             const accountCurrency = ui.lotaje.accountCurrency.value;
             const accountSize = parseFloat(ui.lotaje.accountSize.value) || 0;
             const riskRatio = parseFloat(ui.lotaje.riskRatio.value) || 0;
-            const stopLoss = parseFloat(ui.lotaje.stopLoss.value) || 0;
+            const stopLoss = parseFloat(ui.lotaje.stop-loss.value) || 0;
 
             if (accountSize <= 0 || riskRatio <= 0 || stopLoss <= 0) {
                 ui.lotaje.result.innerHTML = `<p class="text-red-400">Por favor, completa todos los campos con valores válidos.</p>`;
@@ -751,9 +754,6 @@
             if (ui.yield.button) ui.yield.button.addEventListener('click', handleYieldCalculation);
             if (ui.copyButton) ui.copyButton.addEventListener('click', handleCopyAddress);
             if (ui.lotaje.swapButton) ui.lotaje.swapButton.addEventListener('click', handleLotajeCalculation);
-
-            // Mostrar la sección de lotaje al cargar
-            uiState.show(ui.lotaje.container);
         });
     </script>
 </body>
