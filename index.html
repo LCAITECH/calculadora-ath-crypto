@@ -390,472 +390,467 @@
     <p class="text-gray-600 text-xs mt-4">Datos de precios proporcionados por CoinGecko API.</p>
 </footer>
 <script>
-    const ui = {
-        searchInput: document.getElementById('searchInput'),
-        searchButton: document.getElementById('searchButton'),
-        suggestions: document.getElementById('suggestions-list'),
-        result: document.getElementById('result'),
-        examples: document.getElementById('examples'),
-        loader: document.getElementById('loader'),
-        errorMessage: document.getElementById('error-message'),
-        flip: {
-            coinA: document.getElementById('flip-coin-a'),
-            suggestionsA: document.getElementById('suggestions-flip-a'),
-            coinB: document.getElementById('flip-coin-b'),
-            suggestionsB: document.getElementById('suggestions-flip-b'),
-            button: document.getElementById('calculate-flip'),
-            result: document.getElementById('flip-result'),
-        },
-        goal: {
-            initial: document.getElementById('goal-initial'),
-            coin: document.getElementById('goal-coin'),
-            suggestions: document.getElementById('suggestions-goal'),
-            target: document.getElementById('goal-target'),
-            button: document.getElementById('calculate-goal'),
-            result: document.getElementById('goal-result'),
-        },
-        yield: {
-            amount: document.getElementById('yield-amount'),
-            asset: document.getElementById('yield-asset'),
-            button: document.getElementById('calculate-yield'),
-            result: document.getElementById('yield-result'),
-        },
-        copyButton: document.getElementById('copyButton'),
-        copyFeedback: document.getElementById('copy-feedback'),
-        walletAddress: document.getElementById('walletAddress'),
-        lot: {
-            account: document.getElementById('lot-account'),
-            risk: document.getElementById('lot-risk'),
-            sl: document.getElementById('lot-sl'),
-            pipvalue: document.getElementById('lot-pipvalue'),
-            button: document.getElementById('calculate-lot'),
-            result: document.getElementById('lot-result'),
-        }
-    };
+const ui = {
+    searchInput: document.getElementById('searchInput'),
+    searchButton: document.getElementById('searchButton'),
+    suggestions: document.getElementById('suggestions-list'),
+    result: document.getElementById('result'),
+    examples: document.getElementById('examples'),
+    loader: document.getElementById('loader'),
+    errorMessage: document.getElementById('error-message'),
+    flip: {
+        coinA: document.getElementById('flip-coin-a'),
+        suggestionsA: document.getElementById('suggestions-flip-a'),
+        coinB: document.getElementById('flip-coin-b'),
+        suggestionsB: document.getElementById('suggestions-flip-b'),
+        button: document.getElementById('calculate-flip'),
+        result: document.getElementById('flip-result'),
+    },
+    goal: {
+        initial: document.getElementById('goal-initial'),
+        coin: document.getElementById('goal-coin'),
+        suggestions: document.getElementById('suggestions-goal'),
+        target: document.getElementById('goal-target'),
+        button: document.getElementById('calculate-goal'),
+        result: document.getElementById('goal-result'),
+    },
+    yield: {
+        amount: document.getElementById('yield-amount'),
+        asset: document.getElementById('yield-asset'),
+        button: document.getElementById('calculate-yield'),
+        result: document.getElementById('yield-result'),
+    },
+    copyButton: document.getElementById('copyButton'),
+    copyFeedback: document.getElementById('copy-feedback'),
+    walletAddress: document.getElementById('walletAddress')
+};
 
-    const popularCoins = [
-        { id: 'bitcoin', name: 'Bitcoin', logo: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400' },
-        { id: 'ethereum', name: 'Ethereum', logo: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501638' },
-        { id: 'solana', name: 'Solana', logo: 'https://assets.coingecko.com/coins/images/4128/large/solana.png?1696504756' },
-        { id: 'chainlink', name: 'Chainlink', logo: 'https://assets.coingecko.com/coins/images/877/large/chainlink-new-logo.png?1696502009' },
-        { id: 'polkadot', name: 'Polkadot', logo: 'https://assets.coingecko.com/coins/images/12171/large/polkadot.png?1696512008' },
-        { id: 'binancecoin', name: 'BNB', logo: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970' },
-        { id: 'dogecoin', name: 'Dogecoin', logo: 'https://assets.coingecko.com/coins/images/5/large/dogecoin.png?1696501409' },
-        { id: 'shiba-inu', name: 'Shiba Inu', logo: 'https://assets.coingecko.com/coins/images/11939/large/shiba.png?1696511800' },
-        { id: 'ripple', name: 'XRP', logo: 'https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442' },
-        { id: 'uniswap', name: 'Uniswap', logo: 'https://assets.coingecko.com/coins/images/12504/large/uniswap-uni.png?1696512319' }
-    ];
-    
-    let coinList = [];
-    let searchTimeout;
+const popularCoins = [
+    { id: 'bitcoin', name: 'Bitcoin', logo: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400' },
+    { id: 'ethereum', name: 'Ethereum', logo: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501638' },
+    { id: 'solana', name: 'Solana', logo: 'https://assets.coingecko.com/coins/images/4128/large/solana.png?1696504756' },
+    { id: 'chainlink', name: 'Chainlink', logo: 'https://assets.coingecko.com/coins/images/877/large/chainlink-new-logo.png?1696502009' },
+    { id: 'polkadot', name: 'Polkadot', logo: 'https://assets.coingecko.com/coins/images/12171/large/polkadot.png?1696512008' },
+    { id: 'binancecoin', name: 'BNB', logo: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970' },
+    { id: 'dogecoin', name: 'Dogecoin', logo: 'https://assets.coingecko.com/coins/images/5/large/dogecoin.png?1696501409' },
+    { id: 'shiba-inu', name: 'Shiba Inu', logo: 'https://assets.coingecko.com/coins/images/11939/large/shiba.png?1696511800' },
+    { id: 'ripple', name: 'XRP', logo: 'https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442' },
+    { id: 'uniswap', name: 'Uniswap', logo: 'https://assets.coingecko.com/coins/images/12504/large/uniswap-uni.png?1696512319' }
+];
 
-    const uiState = {
-        show: (element) => element.classList.remove('hidden'),
-        hide: (element) => element.classList.add('hidden'),
-        showError: (message, el = ui.errorMessage) => {
-            el.textContent = message;
-            uiState.show(el);
-        },
-        hideError: (el = ui.errorMessage) => uiState.hide(el),
-        showLoader: () => {
-            uiState.show(ui.loader);
-            uiState.hide(ui.result);
-            uiState.hideError();
-        },
-        hideLoader: () => uiState.hide(ui.loader),
-    };
+let coinList = [];
+let searchTimeout;
 
-    async function getCoinList() {
-        if (coinList.length > 0) return;
-        try {
-            const response = await fetch('https://api.coingecko.com/api/v3/coins/list?include_platform=false');
-            if (!response.ok) throw new Error('No se pudo cargar la lista de monedas.');
-            coinList = await response.json();
-        } catch (error) {
-            console.error("Error al obtener la lista de monedas:", error);
-            uiState.showError("No se pudo cargar la lista inicial de monedas. La búsqueda puede no funcionar.");
-        }
+const uiState = {
+    show: (element) => element.classList.remove('hidden'),
+    hide: (element) => element.classList.add('hidden'),
+    showError: (message, el = ui.errorMessage) => {
+        el.textContent = message;
+        uiState.show(el);
+    },
+    hideError: (el = ui.errorMessage) => uiState.hide(el),
+    showLoader: () => {
+        uiState.show(ui.loader);
+        uiState.hide(ui.result);
+        uiState.hideError();
+    },
+    hideLoader: () => uiState.hide(ui.loader),
+};
+
+async function getCoinList() {
+    if (coinList.length > 0) return;
+    try {
+        const response = await fetch('https://api.coingecko.com/api/v3/coins/list?include_platform=false');
+        if (!response.ok) throw new Error(`Error en la API: ${response.status} - ${response.statusText}`);
+        coinList = await response.json();
+        console.log("Lista de monedas cargada:", coinList.length);
+    } catch (error) {
+        console.error("Error al obtener la lista de monedas:", error);
+        uiState.showError("No se pudo cargar la lista de monedas desde CoinGecko. Intenta de nuevo más tarde.");
     }
+}
 
-    async function showSuggestions(query, inputElement, containerElement) {
-        if (!coinList.length) await getCoinList();
-        
-        const queryLower = query.toLowerCase();
-        const filteredCoins = coinList
-            .map(coin => {
-                const nameLower = coin.name.toLowerCase();
-                const symbolLower = coin.symbol.toLowerCase();
-                let score = 0;
-                if (symbolLower === queryLower) {
-                    score = 100;
-                } else if (nameLower === queryLower) {
-                    score = 90;
-                } else if (nameLower.startsWith(queryLower)) {
-                    score = 50;
-                } else if (symbolLower.startsWith(queryLower)) {
-                    score = 40;
-                } else if (nameLower.includes(queryLower)) {
-                    score = 10;
-                }
-                return { ...coin, score };
-            })
-            .filter(coin => coin.score > 0)
-            .sort((a, b) => b.score - a.score);
-
-        containerElement.innerHTML = '';
-        if (filteredCoins.length > 0) {
-            filteredCoins.slice(0, 5).forEach(coin => {
-                const div = document.createElement('div');
-                div.className = "px-4 py-2 hover:bg-gray-700 cursor-pointer";
-                div.textContent = `${coin.name} (${coin.symbol.toUpperCase()})`;
-                div.onclick = () => {
-                    inputElement.value = coin.name;
-                    inputElement.dataset.coinId = coin.id;
-                    uiState.hide(containerElement);
-                };
-                containerElement.appendChild(div);
-            });
-            uiState.show(containerElement);
-        } else {
-            uiState.hide(containerElement);
-        }
-    }
+async function showSuggestions(query, inputElement, containerElement) {
+    if (!coinList.length) await getCoinList();
     
-    async function getCoinDataById(coinId) {
-        if (!coinId) return null;
+    const queryLower = query.toLowerCase();
+    const filteredCoins = coinList
+        .map(coin => {
+            const nameLower = coin.name.toLowerCase();
+            const symbolLower = coin.symbol.toLowerCase();
+            let score = 0;
+            if (symbolLower === queryLower) {
+                score = 100;
+            } else if (nameLower === queryLower) {
+                score = 90;
+            } else if (nameLower.startsWith(queryLower)) {
+                score = 50;
+            } else if (symbolLower.startsWith(queryLower)) {
+                score = 40;
+            } else if (nameLower.includes(queryLower)) {
+                score = 10;
+            }
+            return { ...coin, score };
+        })
+        .filter(coin => coin.score > 0)
+        .sort((a, b) => b.score - a.score);
+
+    containerElement.innerHTML = '';
+    if (filteredCoins.length > 0) {
+        filteredCoins.slice(0, 5).forEach(coin => {
+            const div = document.createElement('div');
+            div.className = "px-4 py-2 hover:bg-gray-700 cursor-pointer";
+            div.textContent = `${coin.name} (${coin.symbol.toUpperCase()})`;
+            div.onclick = () => {
+                inputElement.value = coin.name;
+                inputElement.dataset.coinId = coin.id;
+                uiState.hide(containerElement);
+            };
+            containerElement.appendChild(div);
+        });
+        uiState.show(containerElement);
+    } else {
+        uiState.hide(containerElement);
+    }
+}
+    
+async function getCoinDataById(coinId, maxRetries = 2) {
+    if (!coinId) return null;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
         try {
             const url = `https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false`;
             const response = await fetch(url);
-            if (!response.ok) return null;
-            return await response.json();
+            if (!response.ok) {
+                console.warn(`Intento ${attempt + 1} fallido para ${coinId}: ${response.status} - ${response.statusText}`);
+                if (attempt < maxRetries - 1 && response.status === 429) {
+                    await new Promise(resolve => setTimeout(resolve, 2000 * (attempt + 1))); // Espera 2s, 4s, etc.
+                    continue;
+                }
+                return null;
+            }
+            const data = await response.json();
+            console.log(`Datos crudos para ${coinId}:`, data); // Depuración detallada
+            return data;
         } catch (error) {
-            console.error("Error fetching coin data by ID:", error);
+            console.error(`Error fetching ${coinId} (intento ${attempt + 1}):`, error);
+            if (attempt < maxRetries - 1) {
+                await new Promise(resolve => setTimeout(resolve, 2000 * (attempt + 1)));
+                continue;
+            }
             return null;
         }
     }
+    return null;
+}
 
-    async function fetchMainCoinData(coinId) {
-        uiState.showLoader();
-        const data = await getCoinDataById(coinId);
-        if (data) {
-            calculateAndDisplay(data);
-        } else {
-            uiState.showError("No se pudieron obtener los datos para la moneda seleccionada.");
-            uiState.hideLoader();
-        }
+async function fetchMainCoinData(coinId) {
+    uiState.showLoader();
+    const data = await getCoinDataById(coinId);
+    if (data) {
+        calculateAndDisplay(data);
+    } else {
+        uiState.showError("No se pudieron obtener los datos para la moneda seleccionada. Verifica la conexión o intenta otra moneda.");
+        uiState.hideLoader();
     }
+}
     
-    async function triggerSearch() {
-        const query = ui.searchInput.value.toLowerCase();
-        if (query.length === 0) return;
-        
-        if (!coinList.length) await getCoinList();
-
-        const bestMatch = coinList.find(coin => coin.name.toLowerCase() === query || coin.symbol.toLowerCase() === query);
-
-        if (bestMatch) {
-            uiState.hide(ui.suggestions);
-            ui.searchInput.value = '';
-            fetchMainCoinData(bestMatch.id);
-        } else {
-            uiState.showError(`No se encontró una moneda que coincida exactamente con "${query}". Intenta de nuevo.`);
-        }
-    }
-
-    function calculateAndDisplay(data) {
-        try {
-            const { market_data: md, name, symbol, image } = data;
-            const athPrice = md.ath?.usd;
-            const currentSupply = md.circulating_supply;
-            const currentMarketCap = md.market_cap?.usd;
-            const currentPrice = md.current_price?.usd;
-            const athDate = md.ath_date?.usd ? new Date(md.ath_date.usd).toLocaleDateString('es-ES') : 'N/A';
-
-            if (athPrice === undefined || currentSupply === undefined || currentMarketCap === undefined || currentPrice === undefined) {
-                throw new Error("Datos de la API insuficientes para el cálculo.");
-            }
-
-            const requiredMarketCap = athPrice * currentSupply;
-            const percentageIncrease = currentMarketCap > 0 ? ((requiredMarketCap / currentMarketCap) - 1) * 100 : Infinity;
-            
-            displayResult({
-                name, symbol: symbol.toUpperCase(), image: image.large,
-                athPrice, athDate, currentPrice, currentMarketCap,
-                requiredMarketCap, percentageIncrease
-            });
-            uiState.hideLoader();
-        } catch (error) {
-            console.error("Error al calcular:", error);
-            uiState.showError("No se pudieron procesar los datos recibidos de la API.");
-            uiState.hideLoader();
-        }
-    }
+async function triggerSearch() {
+    const query = ui.searchInput.value.toLowerCase().trim();
+    if (query.length === 0) return;
     
-    const formatCurrency = (num, digits = 2) => num ? new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD', maximumFractionDigits: digits }).format(num) : 'N/A';
-    const formatCompact = (num) => num ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', compactDisplay: 'long' }).format(num) : 'N/A';
+    if (!coinList.length) await getCoinList();
 
-    function displayResult(data) {
-        const { name, symbol, image, athPrice, currentPrice, athDate, currentMarketCap, requiredMarketCap, percentageIncrease } = data;
-        const increaseColor = percentageIncrease > 0 ? (percentageIncrease < 500 ? 'text-green-400' : (percentageIncrease < 2000 ? 'text-yellow-400' : 'text-red-500')) : 'text-gray-400';
+    const bestMatch = coinList.find(coin => 
+        coin.name.toLowerCase() === query || 
+        coin.symbol.toLowerCase() === query || 
+        coin.name.toLowerCase().includes(query) || 
+        coin.symbol.toLowerCase().includes(query)
+    );
 
-        let mensajeColor;
-        if (percentageIncrease < 500) {
-            mensajeColor = "La moneda puede volver a ATH, pero se tienen que dar ciertas situaciones.";
-        } else if (percentageIncrease < 2000) {
-            mensajeColor = "Es poco probable que la moneda pueda volver al ATH, aún así puede lograrlo pero a mediano plazo y que el proyecto vuelva a atraer el interés de los inversores.";
-        } else {
-            mensajeColor = "Es prácticamente imposible que la moneda vuelva al ATH, por más nuevos inversores que tenga, el porcentaje a subir es demasiado alto para que realmente pueda volver.";
+    if (bestMatch) {
+        uiState.hide(ui.suggestions);
+        ui.searchInput.value = '';
+        fetchMainCoinData(bestMatch.id);
+    } else {
+        uiState.showError(`No se encontró una moneda que coincida con "${query}". Intenta con otro nombre o símbolo.`);
+    }
+}
+
+function calculateAndDisplay(data) {
+    try {
+        const { market_data: md = {}, name = 'Desconocido', symbol = 'UNK', image = { large: '' } } = data;
+        const athPrice = md.ath?.usd || 0;
+        const currentSupply = md.circulating_supply || 0;
+        const currentMarketCap = md.market_cap?.usd || 0;
+        const currentPrice = md.current_price?.usd || 0;
+        const athDate = md.ath_date?.usd ? new Date(md.ath_date.usd).toLocaleDateString('es-ES') : 'N/A';
+
+        // Validación de datos mínimos
+        if (currentSupply <= 0 || currentPrice <= 0) {
+            throw new Error("Datos insuficientes para calcular el ATH. Supply o precio inválidos.");
         }
 
-        const nuevoPrecio = requiredMarketCap / (currentSupply || 1);
+        const requiredMarketCap = (athPrice > 0) ? athPrice * currentSupply : currentMarketCap; // Usa market cap actual si ATH no está
+        const percentageIncrease = (currentMarketCap > 0 && athPrice > 0) ? ((requiredMarketCap / currentMarketCap) - 1) * 100 : 0;
 
-        ui.result.innerHTML = `
-            <div class="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto border border-gray-700">
-                <div class="flex flex-col md:flex-row items-center gap-6 mb-8">
-                    <img src="${image}" alt="${name} logo" class="w-20 h-20 rounded-full bg-gray-700 p-2">
-                    <div>
-                        <h2 class="text-3xl font-bold text-white">${name} <span class="text-gray-400 text-2xl">${symbol}</span></h2>
-                        <p class="text-lg text-gray-300">Precio Actual: <span class="font-semibold text-cyan-400">${formatCurrency(currentPrice, currentPrice > 1 ? 2 : 8)}</span></p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div class="bg-gray-700/50 p-4 rounded-lg"><h3 class="text-sm font-medium text-gray-400 mb-1">Máximo Histórico (Precio)</h3><p class="text-2xl font-semibold text-white">${formatCurrency(athPrice, athPrice > 1 ? 2 : 8)}</p><p class="text-xs text-gray-500">Alcanzado el ${athDate}</p></div>
-                    <div class="bg-gray-700/50 p-4 rounded-lg"><h3 class="text-sm font-medium text-gray-400 mb-1">Market Cap Actual</h3><p class="text-2xl font-semibold text-white">${formatCompact(currentMarketCap)}</p></div>
-                </div>
-                <div class="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-6 rounded-xl border border-cyan-500/30 text-center">
-                    <h3 class="text-lg font-medium text-cyan-300 mb-2">Para alcanzar el PRECIO de ATH, ${name} necesita:</h3>
-                    <p class="text-5xl font-bold text-white mt-4">${formatCompact(requiredMarketCap)}</p>
-                    <p class="text-base text-gray-300 mb-4 mt-2">de Capitalización de Mercado (Market Cap)</p>
-                    <div class="mt-4 bg-gray-900/50 rounded-lg p-2 inline-block">
-                        <p class="text-xs text-gray-400">Aumento necesario del Market Cap:</p>
-                        <p class="text-xl font-bold ${increaseColor}">${isFinite(percentageIncrease) ? (percentageIncrease > 0 ? '+' : '') + percentageIncrease.toFixed(2) + '%' : '∞'}</p>
-                    </div>
-                    <p class="text-sm text-gray-400 mt-4">${mensajeColor}</p>
-                    <p class="text-sm text-cyan-400 mt-4">Con la emisión actual, el precio que podría alcanzar si recupera su market cap de ATH sería:</p>
-                    <p class="text-2xl font-bold text-green-300">${formatCurrency(nuevoPrecio, nuevoPrecio > 1 ? 2 : 8)}</p>
-                </div>
-                <div class="mt-6 text-center">
-                    <button onclick="shareProjectionAsImage()" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg shadow">
-                        Compartir Proyección
-                    </button>
-                </div>
-            </div>`;
-        uiState.show(ui.result);
-    }
-
-    function populateExamples() {
-        ui.examples.innerHTML = '';
-        popularCoins.forEach(coin => {
-            const button = document.createElement('button');
-            button.className = 'bg-gray-800 border border-gray-700 p-3 rounded-lg flex flex-col items-center justify-center gap-2 hover:bg-gray-700 hover:border-cyan-500 transition duration-300';
-            button.onclick = () => fetchMainCoinData(coin.id);
-            button.innerHTML = `<img src="${coin.logo}" alt="${coin.name} logo" class="w-10 h-10"><span class="text-sm font-medium text-white">${coin.name}</span>`;
-            ui.examples.appendChild(button);
+        displayResult({
+            name, symbol: symbol.toUpperCase(), image: image.large,
+            athPrice, athDate, currentPrice, currentMarketCap,
+            requiredMarketCap, percentageIncrease
         });
+        uiState.hideLoader();
+    } catch (error) {
+        console.error("Error al calcular:", error);
+        uiState.showError(`No se pudieron procesar los datos para ${data.name || 'la moneda'}. Mostrando datos parciales si están disponibles.`);
+        displayPartialResult(data); // Muestra lo que pueda
+        uiState.hideLoader();
     }
+}
+
+function displayResult(data) {
+    const { name, symbol, image, athPrice, currentPrice, athDate, currentMarketCap, requiredMarketCap, percentageIncrease } = data;
+    const increaseColor = percentageIncrease > 0 ? (percentageIncrease < 500 ? 'text-green-400' : (percentageIncrease < 2000 ? 'text-yellow-400' : 'text-red-500')) : 'text-gray-400';
+    const message = percentageIncrease < 500 ? "La moneda puede volver a ATH con ciertas condiciones."
+        : percentageIncrease < 2000 ? "Es poco probable volver al ATH a corto plazo, pero posible con interés inversor."
+        : "Es muy difícil que la moneda vuelva al ATH debido al alto aumento necesario.";
+
+    ui.result.innerHTML = `
+        <div class="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto border border-gray-700">
+            <div class="flex flex-col md:flex-row items-center gap-6 mb-8">
+                <img src="${image || 'https://via.placeholder.com/80'}" alt="${name} logo" class="w-20 h-20 rounded-full bg-gray-700 p-2">
+                <div>
+                    <h2 class="text-3xl font-bold text-white">${name} <span class="text-gray-400 text-2xl">${symbol}</span></h2>
+                    <p class="text-lg text-gray-300">Precio Actual: <span class="font-semibold text-cyan-400">${formatCurrency(currentPrice, currentPrice > 1 ? 2 : 8)}</span></p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-gray-700/50 p-4 rounded-lg"><h3 class="text-sm font-medium text-gray-400 mb-1">Máximo Histórico (Precio)</h3><p class="text-2xl font-semibold text-white">${formatCurrency(athPrice, athPrice > 1 ? 2 : 8)}</p><p class="text-xs text-gray-500">Alcanzado el ${athDate}</p></div>
+                <div class="bg-gray-700/50 p-4 rounded-lg"><h3 class="text-sm font-medium text-gray-400 mb-1">Market Cap Actual</h3><p class="text-2xl font-semibold text-white">${formatCompact(currentMarketCap)}</p></div>
+            </div>
+            <div class="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-6 rounded-xl border border-cyan-500/30 text-center">
+                <h3 class="text-lg font-medium text-cyan-300 mb-2">Para alcanzar el PRECIO de ATH, ${name} necesita:</h3>
+                <p class="text-5xl font-bold text-white mt-4">${formatCompact(requiredMarketCap)}</p>
+                <p class="text-base text-gray-300 mb-4 mt-2">de Capitalización de Mercado (Market Cap)</p>
+                <div class="mt-4 bg-gray-900/50 rounded-lg p-2 inline-block">
+                    <p class="text-xs text-gray-400">Aumento necesario del Market Cap:</p>
+                    <p class="text-xl font-bold ${increaseColor}">${isFinite(percentageIncrease) ? (percentageIncrease > 0 ? '+' : '') + percentageIncrease.toFixed(2) + '%' : 'N/A'}</p>
+                </div>
+                <p class="text-sm text-gray-400 mt-4">${message}</p>
+            </div>
+        </div>`;
+    uiState.show(ui.result);
+}
+
+function displayPartialResult(data) {
+    const { market_data: md = {}, name = 'Desconocido', symbol = 'UNK', image = { large: '' } } = data;
+    const currentPrice = md.current_price?.usd || 0;
+    const currentMarketCap = md.market_cap?.usd || 0;
+    const athPrice = md.ath?.usd || currentPrice; // Usa precio actual si ATH no está
+    const athDate = md.ath_date?.usd ? new Date(md.ath_date.usd).toLocaleDateString('es-ES') : 'N/A';
+    const currentSupply = md.circulating_supply || 0;
+    const requiredMarketCap = (athPrice > 0) ? athPrice * currentSupply : currentMarketCap;
+    const percentageIncrease = (currentMarketCap > 0 && athPrice > 0) ? ((requiredMarketCap / currentMarketCap) - 1) * 100 : 0;
+
+    ui.result.innerHTML = `
+        <div class="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto border border-gray-700">
+            <div class="flex flex-col md:flex-row items-center gap-6 mb-8">
+                <img src="${image.large || 'https://via.placeholder.com/80'}" alt="${name} logo" class="w-20 h-20 rounded-full bg-gray-700 p-2">
+                <div>
+                    <h2 class="text-3xl font-bold text-white">${name} <span class="text-gray-400 text-2xl">${symbol}</span></h2>
+                    <p class="text-lg text-gray-300">Precio Actual: <span class="font-semibold text-cyan-400">${formatCurrency(currentPrice, currentPrice > 1 ? 2 : 8)}</span></p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-gray-700/50 p-4 rounded-lg"><h3 class="text-sm font-medium text-gray-400 mb-1">Máximo Histórico (Precio)</h3><p class="text-2xl font-semibold text-white">${formatCurrency(athPrice, athPrice > 1 ? 2 : 8)}</p><p class="text-xs text-gray-500">Alcanzado el ${athDate}</p></div>
+                <div class="bg-gray-700/50 p-4 rounded-lg"><h3 class="text-sm font-medium text-gray-400 mb-1">Market Cap Actual</h3><p class="text-2xl font-semibold text-white">${formatCompact(currentMarketCap)}</p></div>
+            </div>
+            <div class="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-6 rounded-xl border border-cyan-500/30 text-center">
+                <h3 class="text-lg font-medium text-cyan-300 mb-2">Datos parciales disponibles:</h3>
+                <p class="text-5xl font-bold text-white mt-4">${formatCompact(requiredMarketCap)}</p>
+                <p class="text-base text-gray-300 mb-4 mt-2">Capitalización estimada</p>
+                <div class="mt-4 bg-gray-900/50 rounded-lg p-2 inline-block">
+                    <p class="text-xs text-gray-400">Aumento estimado:</p>
+                    <p class="text-xl font-bold text-gray-400">${isFinite(percentageIncrease) ? (percentageIncrease > 0 ? '+' : '') + percentageIncrease.toFixed(2) + '%' : 'N/A'}</p>
+                </div>
+                <p class="text-sm text-yellow-400 mt-4">Algunos datos faltan. Resultados pueden ser aproximados.</p>
+            </div>
+        </div>`;
+    uiState.show(ui.result);
+}
+
+const formatCurrency = (num, digits = 2) => num ? new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD', maximumFractionDigits: digits }).format(num) : 'N/A';
+const formatCompact = (num) => num ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', compactDisplay: 'long' }).format(num) : 'N/A';
+
+function populateExamples() {
+    ui.examples.innerHTML = '';
+    popularCoins.forEach(coin => {
+        const button = document.createElement('button');
+        button.className = 'bg-gray-800 border border-gray-700 p-3 rounded-lg flex flex-col items-center justify-center gap-2 hover:bg-gray-700 hover:border-cyan-500 transition duration-300';
+        button.onclick = () => fetchMainCoinData(coin.id);
+        button.innerHTML = `<img src="${coin.logo}" alt="${coin.name} logo" class="w-10 h-10"><span class="text-sm font-medium text-white">${coin.name}</span>`;
+        ui.examples.appendChild(button);
+    });
+}
     
-    async function handleFlipCalculation() {
-        const coinAId = ui.flip.coinA.dataset.coinId;
-        const coinBId = ui.flip.coinB.dataset.coinId;
-        const resultEl = ui.flip.result;
+async function handleFlipCalculation() {
+    const coinAId = ui.flip.coinA.dataset.coinId;
+    const coinBId = ui.flip.coinB.dataset.coinId;
+    const resultEl = ui.flip.result;
 
-        if (!coinAId || !coinBId) {
-            resultEl.innerHTML = `<p class="text-red-400">Por favor, selecciona ambas monedas de la lista.</p>`;
-            uiState.show(resultEl);
-            return;
-        }
-
-        resultEl.innerHTML = `<div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6 mx-auto"></div>`;
+    if (!coinAId || !coinBId) {
+        resultEl.innerHTML = `<p class="text-red-400">Por favor, selecciona ambas monedas de la lista.</p>`;
         uiState.show(resultEl);
+        return;
+    }
 
-        const [dataA, dataB] = await Promise.all([getCoinDataById(coinAId), getCoinDataById(coinBId)]);
+    resultEl.innerHTML = `<div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6 mx-auto"></div>`;
+    uiState.show(resultEl);
 
-        if (!dataA || !dataB) {
-            resultEl.innerHTML = `<p class="text-red-400">No se pudieron obtener los datos. Inténtalo de nuevo.</p>`;
-            return;
-        }
-        
-        const supplyA = dataA.market_data.circulating_supply;
-        const marketCapB = dataB.market_data.market_cap.usd;
+    const [dataA, dataB] = await Promise.all([getCoinDataById(coinAId), getCoinDataById(coinBId)]);
 
-        if (supplyA > 0 && marketCapB) {
-            const potentialPrice = marketCapB / supplyA;
-            resultEl.innerHTML = `<p class="text-gray-300">El precio de ${dataA.name} sería <span class="text-2xl font-bold text-cyan-400 block">${formatCurrency(potentialPrice, potentialPrice > 1 ? 2 : 8)}</span></p>`;
-        } else {
-            resultEl.innerHTML = `<p class="text-red-400">Datos insuficientes para el cálculo.</p>`;
-        }
+    if (!dataA || !dataB) {
+        resultEl.innerHTML = `<p class="text-red-400">No se pudieron obtener los datos de una o ambas monedas.</p>`;
+        return;
     }
     
-    async function handleGoalCalculation() {
-        const initial = parseFloat(ui.goal.initial.value);
-        const target = parseFloat(ui.goal.target.value);
-        const coinId = ui.goal.coin.dataset.coinId;
-        const resultEl = ui.goal.result;
+    const supplyA = dataA.market_data?.circulating_supply || 0;
+    const marketCapB = dataB.market_data?.market_cap?.usd || 0;
 
-        if (isNaN(initial) || isNaN(target) || !coinId || initial <= 0 || target <= initial) {
-            resultEl.innerHTML = `<p class="text-red-400">Por favor, completa todos los campos con valores válidos.</p>`;
-            uiState.show(resultEl);
-            return;
-        }
-        
-        resultEl.innerHTML = `<div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6 mx-auto"></div>`;
+    if (supplyA > 0 && marketCapB > 0) {
+        const potentialPrice = marketCapB / supplyA;
+        resultEl.innerHTML = `<p class="text-gray-300">El precio de ${dataA.name} sería <span class="text-2xl font-bold text-cyan-400 block">${formatCurrency(potentialPrice, potentialPrice > 1 ? 2 : 8)}</span></p>`;
+    } else {
+        resultEl.innerHTML = `<p class="text-red-400">Datos insuficientes para el cálculo del Flippening.</p>`;
+    }
+}
+    
+async function handleGoalCalculation() {
+    const initial = parseFloat(ui.goal.initial.value) || 0;
+    const target = parseFloat(ui.goal.target.value) || 0;
+    const coinId = ui.goal.coin.dataset.coinId;
+    const resultEl = ui.goal.result;
+
+    if (!coinId || initial <= 0 || target <= initial) {
+        resultEl.innerHTML = `<p class="text-red-400">Por favor, completa los campos con valores válidos (inversión inicial < objetivo).</p>`;
         uiState.show(resultEl);
-        
-        const data = await getCoinDataById(coinId);
-
-        if (!data) {
-            resultEl.innerHTML = `<p class="text-red-400">No se pudo obtener datos para la moneda.</p>`;
-            return;
-        }
-        
-        const currentPrice = data.market_data.current_price.usd;
-        const currentSupply = data.market_data.circulating_supply;
-
-        if (currentPrice > 0 && currentSupply > 0) {
-            const multiplier = target / initial;
-            const targetPrice = currentPrice * multiplier;
-            const requiredMarketCap = targetPrice * currentSupply;
-
-            resultEl.innerHTML = `
-                <p class="text-gray-300 text-sm">Para un ${multiplier.toFixed(1)}x, ${data.name} necesita:</p>
-                <p class="text-xl font-bold text-cyan-400">${formatCompact(requiredMarketCap)}</p>
-                <p class="text-gray-400 text-xs">(Precio objetivo: ${formatCurrency(targetPrice, targetPrice > 1 ? 2 : 8)})</p>
-            `;
-        } else {
-            resultEl.innerHTML = `<p class="text-red-400">Datos insuficientes para el cálculo.</p>`;
-        }
+        return;
     }
     
-    function handleYieldCalculation() {
-        const amount = parseFloat(ui.yield.amount.value);
-        const apy = parseFloat(ui.yield.asset.value);
-        const resultEl = ui.yield.result;
+    resultEl.innerHTML = `<div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6 mx-auto"></div>`;
+    uiState.show(resultEl);
+    
+    const data = await getCoinDataById(coinId);
 
-        if (isNaN(amount) || isNaN(apy) || amount <= 0) {
-            resultEl.innerHTML = `<p class="text-red-400">Ingresa un monto válido.</p>`;
-            uiState.show(resultEl);
-            return;
-        }
+    if (!data) {
+        resultEl.innerHTML = `<p class="text-red-400">No se pudo obtener datos para la moneda.</p>`;
+        return;
+    }
+    
+    const currentPrice = data.market_data?.current_price?.usd || 0;
+    const currentSupply = data.market_data?.circulating_supply || 0;
 
-        // Validación de límite para BingX (10% USDT)
-        if (ui.yield.asset.value === "10" && amount > 1000) {
-            resultEl.innerHTML = `<p class="text-red-400">El monto máximo para USDT en BingX es $1000.</p>`;
-            uiState.show(resultEl);
-            return;
-        }
-
-        // Cálculo de interés simple (APR)
-        const simpleInterest = amount * (apy / 100);
-
-        // Cálculo de interés compuesto (APY) con capitalización diaria (365 días)
-        const dailyRate = apy / 100 / 365;
-        const compoundTotal = amount * Math.pow(1 + dailyRate, 365);
-        const compoundInterest = compoundTotal - amount;
+    if (currentPrice > 0 && currentSupply > 0) {
+        const multiplier = target / initial;
+        const targetPrice = currentPrice * multiplier;
+        const requiredMarketCap = targetPrice * currentSupply;
 
         resultEl.innerHTML = `
-            <div class="space-y-3">
-                <div>
-                    <p class="text-gray-300 text-sm">Ganancia (Interés Simple - APR):</p>
-                    <p class="text-lg font-bold text-green-400">${formatCurrency(simpleInterest)}</p>
-                </div>
-                <div>
-                    <p class="text-gray-300 text-sm">Ganancia (Interés Compuesto Anual - APY):</p>
-                    <p class="text-xl font-bold text-green-300">${formatCurrency(compoundInterest)}</p>
-                </div>
-                <p class="text-xs text-gray-500 pt-2">Cálculo a 1 año con capitalización diaria. No incluye fluctuaciones de precio del activo base.</p>
-            </div>
+            <p class="text-gray-300 text-sm">Para un ${multiplier.toFixed(1)}x, ${data.name} necesita:</p>
+            <p class="text-xl font-bold text-cyan-400">${formatCompact(requiredMarketCap)}</p>
+            <p class="text-gray-400 text-xs">(Precio objetivo: ${formatCurrency(targetPrice, targetPrice > 1 ? 2 : 8)})</p>
         `;
+    } else {
+        resultEl.innerHTML = `<p class="text-red-400">Datos insuficientes para calcular el Market Cap necesario.</p>`;
+    }
+}
+    
+function handleYieldCalculation() {
+    const amount = parseFloat(ui.yield.amount.value) || 0;
+    const apy = parseFloat(ui.yield.asset.value) || 0;
+    const resultEl = ui.yield.result;
+
+    if (amount <= 0 || apy <= 0) {
+        resultEl.innerHTML = `<p class="text-red-400">Ingresa un monto y selecciona un activo válido.</p>`;
         uiState.show(resultEl);
+        return;
     }
+    
+    const simpleInterest = amount * (apy / 100);
+    const dailyRate = apy / 100 / 365;
+    const compoundInterest = amount * (Math.pow(1 + dailyRate, 365) - 1);
 
-    function handleCopyAddress() {
-        const address = ui.walletAddress.textContent;
-        navigator.clipboard.writeText(address).then(() => {
-            ui.copyFeedback.textContent = '¡Dirección copiada!';
-            uiState.show(ui.copyFeedback);
-            setTimeout(() => {
-                uiState.hide(ui.copyFeedback);
-            }, 2000);
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-            ui.copyFeedback.textContent = 'Error al copiar';
-            uiState.show(ui.copyFeedback);
-        });
-    }
+    resultEl.innerHTML = `
+        <div class="space-y-3">
+            <div>
+                <p class="text-gray-300 text-sm">Ganancia (Interés Simple - APR):</p>
+                <p class="text-lg font-bold text-green-400">${formatCurrency(simpleInterest)}</p>
+            </div>
+            <div>
+                <p class="text-gray-300 text-sm">Ganancia (Interés Compuesto - APY):</p>
+                <p class="text-xl font-bold text-green-300">${formatCurrency(compoundInterest)}</p>
+            </div>
+            <p class="text-xs text-gray-500 pt-2">Cálculo a 1 año con capitalización diaria. No incluye fluctuaciones.</p>
+        </div>`;
+    uiState.show(resultEl);
+}
 
-    // --- Carga Inicial de la App y Event Listeners ---
-    document.addEventListener('DOMContentLoaded', () => {
-        populateExamples();
-        getCoinList();
-        
-        document.addEventListener('click', function(event) {
-            const allSuggestions = document.querySelectorAll('[id^="suggestions"]');
-            allSuggestions.forEach(s => {
-                const container = s.parentElement;
-                if (container && !container.contains(event.target)) {
-                    uiState.hide(s);
-                }
-            });
-        });
-        
-        const setupSearch = (input, suggestions) => {
-            if (!input) return;
-            input.addEventListener('input', (e) => {
-                clearTimeout(searchTimeout);
-                const query = e.target.value.toLowerCase();
-                if (query.length < 2) { uiState.hide(suggestions); return; }
-                searchTimeout = setTimeout(() => showSuggestions(query, input, suggestions), 300);
-            });
-        };
-
-        setupSearch(ui.searchInput, ui.suggestions);
-        setupSearch(ui.flip.coinA, ui.flip.suggestionsA);
-        setupSearch(ui.flip.coinB, ui.flip.suggestionsB);
-        setupSearch(ui.goal.coin, ui.goal.suggestions);
-
-        if (ui.searchButton) ui.searchButton.addEventListener('click', triggerSearch);
-        if (ui.searchInput) ui.searchInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                triggerSearch();
-            }
-        });
-
-        if (ui.flip.button) ui.flip.button.addEventListener('click', handleFlipCalculation);
-        if (ui.goal.button) ui.goal.button.addEventListener('click', handleGoalCalculation);
-        if (ui.yield.button) ui.yield.button.addEventListener('click', handleYieldCalculation);
-        if (ui.lot.button) ui.lot.button.addEventListener('click', () => {
-            const acc = parseFloat(ui.lot.account.value);
-            const risk = parseFloat(ui.lot.risk.value);
-            const sl = parseFloat(ui.lot.sl.value);
-            const pip = parseFloat(ui.lot.pipvalue.value);
-            const result = ui.lot.result;
-            if (isNaN(acc) || isNaN(risk) || isNaN(sl) || isNaN(pip) || sl <= 0 || pip <= 0) {
-                result.innerHTML = '<p class="text-red-400">Completa todos los campos con valores válidos.</p>';
-                result.classList.remove('hidden');
-                return;
-            }
-            const riskMoney = acc * (risk / 100);
-            const lotSize = riskMoney / (sl * pip);
-            result.innerHTML = `<p class="text-gray-300">Deberías operar un lote de:</p><p class="text-2xl font-bold text-green-400 mt-2">${lotSize.toFixed(2)}</p>`;
-            result.classList.remove('hidden');
-        });
-        if (ui.copyButton) ui.copyButton.addEventListener('click', handleCopyAddress);
-
-        // Ejemplo comentado para actualización de tasas en tiempo real (requiere API)
-        /*
-        async function updateRates() {
-            try {
-                const response = await fetch('URL_API'); // Reemplazar con URL real de API (ej: BingX, Nexo, OKX)
-                const rates = await response.json();
-                ui.yield.asset.innerHTML = Object.entries(rates).map(([asset, rate]) => 
-                    `<option value="${rate}">${asset} (${rate}%)</option>`).join('');
-            } catch (error) {
-                console.error("Error al actualizar tasas:", error);
-            }
-        }
-        setInterval(updateRates, 3600000); // Actualiza cada hora
-        */
+function handleCopyAddress() {
+    const address = ui.walletAddress.textContent;
+    navigator.clipboard.writeText(address).then(() => {
+        ui.copyFeedback.textContent = '¡Dirección copiada!';
+        uiState.show(ui.copyFeedback);
+        setTimeout(() => {
+            uiState.hide(ui.copyFeedback);
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        ui.copyFeedback.textContent = 'Error al copiar';
+        uiState.show(ui.copyFeedback);
     });
+}
+
+// --- Carga Inicial de la App y Event Listeners ---
+document.addEventListener('DOMContentLoaded', () => {
+    populateExamples();
+    getCoinList();
+    
+    document.addEventListener('click', function(event) {
+        const allSuggestions = document.querySelectorAll('[id^="suggestions"]');
+        allSuggestions.forEach(s => {
+            const container = s.parentElement;
+            if (container && !container.contains(event.target)) {
+                uiState.hide(s);
+            }
+        });
+    });
+    
+    const setupSearch = (input, suggestions) => {
+        if (!input) return;
+        input.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.toLowerCase().trim();
+            if (query.length < 2) { uiState.hide(suggestions); return; }
+            searchTimeout = setTimeout(() => showSuggestions(query, input, suggestions), 300);
+        });
+    };
+
+    setupSearch(ui.searchInput, ui.suggestions);
+    setupSearch(ui.flip.coinA, ui.flip.suggestionsA);
+    setupSearch(ui.flip.coinB, ui.flip.suggestionsB);
+    setupSearch(ui.goal.coin, ui.goal.suggestions);
+
+    if (ui.searchButton) ui.searchButton.addEventListener('click', triggerSearch);
+    if (ui.searchInput) ui.searchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            triggerSearch();
+        }
+    });
+
+    if (ui.flip.button) ui.flip.button.addEventListener('click', handleFlipCalculation);
+    if (ui.goal.button) ui.goal.button.addEventListener('click', handleGoalCalculation);
+    if (ui.yield.button) ui.yield.button.addEventListener('click', handleYieldCalculation);
+    if (ui.copyButton) ui.copyButton.addEventListener('click', handleCopyAddress);
+});
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
