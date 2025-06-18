@@ -597,15 +597,17 @@ function calculateAndDisplay(data) {
             throw new Error("Datos insuficientes para calcular el ATH. Supply o precio inválidos.");
         }
 
-        const athMarketCap = (athPrice > 0) ? athPrice * currentSupply : currentMarketCap; // Market Cap al ATH con suministro actual
-        const requiredMarketCap = (athPrice > 0) ? athPrice * currentSupply : currentMarketCap; // Para mantener consistencia
-        const percentageIncrease = (currentMarketCap > 0 && athPrice > 0) ? ((requiredMarketCap / currentMarketCap) - 1) * 100 : 0;
-        const estimatedPriceAtAth = (athMarketCap > 0 && currentSupply > 0) ? athMarketCap / currentSupply : currentPrice; // Precio estimado con Market Cap de ATH
+        // Calcular el Market Cap estimado del ATH con el suministro histórico (no disponible directamente, usamos ATH price * supply actual como aproximación)
+        const historicalAthMarketCap = athPrice * currentSupply; // Aproximación: asumimos suministro constante para simplicidad
+        const requiredMarketCap = historicalAthMarketCap; // Para alcanzar el precio ATH con suministro actual
+        const percentageIncrease = (currentMarketCap > 0) ? ((requiredMarketCap / currentMarketCap) - 1) * 100 : 0;
+        // Precio estimado si recupera el Market Cap de ATH con suministro actual
+        const estimatedPriceAtAthMarketCap = (historicalAthMarketCap > 0 && currentSupply > 0) ? historicalAthMarketCap / currentSupply : athPrice;
 
         displayResult({
             name, symbol: symbol.toUpperCase(), image: image.large,
             athPrice, athDate, currentPrice, currentMarketCap,
-            requiredMarketCap, percentageIncrease, estimatedPriceAtAth
+            requiredMarketCap, percentageIncrease, estimatedPriceAtAthMarketCap
         });
         uiState.hideLoader();
     } catch (error) {
@@ -617,12 +619,12 @@ function calculateAndDisplay(data) {
 }
 
 function displayResult(data) {
-    const { name, symbol, image, athPrice, currentPrice, athDate, currentMarketCap, requiredMarketCap, percentageIncrease, estimatedPriceAtAth } = data;
+    const { name, symbol, image, athPrice, currentPrice, athDate, currentMarketCap, requiredMarketCap, percentageIncrease, estimatedPriceAtAthMarketCap } = data;
     const increaseColor = percentageIncrease > 0 ? (percentageIncrease < 500 ? 'text-green-400' : (percentageIncrease < 2000 ? 'text-yellow-400' : 'text-red-500')) : 'text-gray-400';
     const message = percentageIncrease < 500 ? "La moneda puede volver a ATH con ciertas condiciones."
         : percentageIncrease < 2000 ? "Es poco probable volver al ATH a corto plazo, pero posible con interés inversor."
         : "Es muy difícil que la moneda vuelva al ATH debido al alto aumento necesario.";
-    const estimatedPriceMessage = estimatedPriceAtAth > 0 ? `Precio estimado si recupera el ATH: ${formatCurrency(estimatedPriceAtAth, estimatedPriceAtAth > 1 ? 2 : 8)}` : '';
+    const estimatedPriceMessage = estimatedPriceAtAthMarketCap > 0 ? `Precio estimado si recupera el Market Cap de ATH: ${formatCurrency(estimatedPriceAtAthMarketCap, estimatedPriceAtAthMarketCap > 1 ? 2 : 8)}` : '';
 
     ui.result.innerHTML = `
         <div class="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto border border-gray-700">
@@ -675,10 +677,10 @@ function displayPartialResult(data) {
     const athPrice = md.ath?.usd || currentPrice;
     const athDate = md.ath_date?.usd ? new Date(md.ath_date.usd).toLocaleDateString('es-ES') : 'N/A';
     const currentSupply = md.circulating_supply || 0;
-    const athMarketCap = (athPrice > 0) ? athPrice * currentSupply : currentMarketCap;
-    const requiredMarketCap = (athPrice > 0) ? athPrice * currentSupply : currentMarketCap;
+    const historicalAthMarketCap = athPrice * currentSupply; // Aproximación con suministro actual
+    const requiredMarketCap = historicalAthMarketCap;
     const percentageIncrease = (currentMarketCap > 0 && athPrice > 0) ? ((requiredMarketCap / currentMarketCap) - 1) * 100 : 0;
-    const estimatedPriceAtAth = (athMarketCap > 0 && currentSupply > 0) ? athMarketCap / currentSupply : currentPrice;
+    const estimatedPriceAtAthMarketCap = (historicalAthMarketCap > 0 && currentSupply > 0) ? historicalAthMarketCap / currentSupply : athPrice;
 
     ui.result.innerHTML = `
         <div class="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto border border-gray-700">
