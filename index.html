@@ -84,44 +84,65 @@
 
         /* === NEON GLOW PER COIN === */
         .glow-btc {
-            box-shadow: 0 0 28px rgba(247, 147, 26, 0.4), 0 0 8px rgba(247, 147, 26, 0.2);
-            border-color: rgba(247, 147, 26, 0.5) !important;
+            box-shadow: 0 0 18px rgba(247, 147, 26, 0.95), 0 0 45px rgba(247, 147, 26, 0.6), 0 0 90px rgba(247, 147, 26, 0.25), inset 0 1px 0 rgba(247, 147, 26, 0.15);
+            border-color: rgba(247, 147, 26, 0.95) !important;
+            animation: coinGlowPulse 3s ease-in-out infinite;
         }
 
         .glow-eth {
-            box-shadow: 0 0 28px rgba(98, 126, 234, 0.4), 0 0 8px rgba(98, 126, 234, 0.2);
-            border-color: rgba(98, 126, 234, 0.5) !important;
+            box-shadow: 0 0 18px rgba(98, 126, 234, 0.95), 0 0 45px rgba(98, 126, 234, 0.6), 0 0 90px rgba(98, 126, 234, 0.25), inset 0 1px 0 rgba(98, 126, 234, 0.15);
+            border-color: rgba(98, 126, 234, 0.95) !important;
+            animation: coinGlowPulse 3s ease-in-out infinite;
         }
 
         .glow-sol {
-            box-shadow: 0 0 28px rgba(168, 85, 247, 0.4), 0 0 8px rgba(34, 211, 238, 0.2);
-            border-color: rgba(168, 85, 247, 0.5) !important;
+            box-shadow: 0 0 18px rgba(168, 85, 247, 0.95), 0 0 45px rgba(168, 85, 247, 0.6), 0 0 90px rgba(168, 85, 247, 0.25), inset 0 1px 0 rgba(168, 85, 247, 0.15);
+            border-color: rgba(168, 85, 247, 0.95) !important;
+            animation: coinGlowPulse 3s ease-in-out infinite;
         }
 
         .glow-bnb {
-            box-shadow: 0 0 28px rgba(243, 186, 47, 0.4), 0 0 8px rgba(243, 186, 47, 0.2);
-            border-color: rgba(243, 186, 47, 0.5) !important;
+            box-shadow: 0 0 18px rgba(243, 186, 47, 0.95), 0 0 45px rgba(243, 186, 47, 0.6), 0 0 90px rgba(243, 186, 47, 0.25), inset 0 1px 0 rgba(243, 186, 47, 0.15);
+            border-color: rgba(243, 186, 47, 0.95) !important;
+            animation: coinGlowPulse 3s ease-in-out infinite;
         }
 
         .glow-xrp {
-            box-shadow: 0 0 28px rgba(34, 211, 238, 0.4), 0 0 8px rgba(34, 211, 238, 0.2);
-            border-color: rgba(34, 211, 238, 0.5) !important;
+            box-shadow: 0 0 18px rgba(34, 211, 238, 0.95), 0 0 45px rgba(34, 211, 238, 0.6), 0 0 90px rgba(34, 211, 238, 0.25), inset 0 1px 0 rgba(34, 211, 238, 0.15);
+            border-color: rgba(34, 211, 238, 0.95) !important;
+            animation: coinGlowPulse 3s ease-in-out infinite;
         }
 
         .glow-doge {
-            box-shadow: 0 0 28px rgba(196, 148, 29, 0.4), 0 0 8px rgba(196, 148, 29, 0.2);
-            border-color: rgba(196, 148, 29, 0.5) !important;
+            box-shadow: 0 0 18px rgba(196, 148, 29, 0.95), 0 0 45px rgba(196, 148, 29, 0.6), 0 0 90px rgba(196, 148, 29, 0.25), inset 0 1px 0 rgba(196, 148, 29, 0.15);
+            border-color: rgba(196, 148, 29, 0.95) !important;
+            animation: coinGlowPulse 3s ease-in-out infinite;
         }
 
         .glow-dot {
-            box-shadow: 0 0 28px rgba(230, 0, 122, 0.4), 0 0 8px rgba(230, 0, 122, 0.2);
-            border-color: rgba(230, 0, 122, 0.5) !important;
+            box-shadow: 0 0 18px rgba(230, 0, 122, 0.95), 0 0 45px rgba(230, 0, 122, 0.6), 0 0 90px rgba(230, 0, 122, 0.25), inset 0 1px 0 rgba(230, 0, 122, 0.15);
+            border-color: rgba(230, 0, 122, 0.95) !important;
+            animation: coinGlowPulse 3s ease-in-out infinite;
         }
 
         .glow-default {
-            box-shadow: 0 0 24px rgba(34, 211, 238, 0.25), 0 0 8px rgba(34, 211, 238, 0.15);
-            border-color: rgba(34, 211, 238, 0.35) !important;
+            box-shadow: 0 0 18px rgba(34, 211, 238, 0.8), 0 0 45px rgba(34, 211, 238, 0.5), 0 0 90px rgba(34, 211, 238, 0.2), inset 0 1px 0 rgba(34, 211, 238, 0.12);
+            border-color: rgba(34, 211, 238, 0.85) !important;
+            animation: coinGlowPulse 3s ease-in-out infinite;
         }
+
+        @keyframes coinGlowPulse {
+
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+
+            50% {
+                filter: brightness(1.12);
+            }
+        }
+
 
         /* === MASCOT === */
         .mascot-container {
@@ -208,7 +229,7 @@
             </div>
             <div id="suggestions-container" class="relative w-full">
                 <ul id="suggestions-list"
-                    class="absolute z-20 w-full mt-1 bg-gray-800 border border-gray-700 rounded-lg hidden max-h-60 overflow-y-auto">
+                    class="absolute z-20 w-full mt-1 bg-gray-800/95 backdrop-blur-sm border border-gray-600 rounded-xl shadow-2xl hidden max-h-72 overflow-y-auto divide-y divide-gray-700">
                 </ul>
             </div>
             <p id="error-message" class="text-red-400 text-sm mt-2 text-center hidden"></p>
@@ -755,8 +776,12 @@
             if (matches.length > 0) {
                 matches.forEach(coin => {
                     const li = document.createElement("li");
-                    li.className = "px-4 py-2 hover:bg-gray-700 cursor-pointer";
-                    li.textContent = `${coin.name} (${coin.symbol.toUpperCase()})`;
+                    li.className = "flex items-center gap-3 px-4 py-2.5 hover:bg-gray-700/80 cursor-pointer transition-colors";
+                    const knownCoin = popularCoins.find(p => p.id === coin.id);
+                    const logoHtml = knownCoin
+                        ? `<img src="${knownCoin.logo}" class="w-7 h-7 rounded-full flex-shrink-0" onerror="this.outerHTML='<span class=&quot;w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center text-xs font-bold flex-shrink-0&quot;>${coin.symbol[0].toUpperCase()}</span>'">`
+                        : `<span class="w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center text-xs font-bold flex-shrink-0">${(coin.symbol || '?')[0].toUpperCase()}</span>`;
+                    li.innerHTML = `${logoHtml}<span class="font-medium text-white text-sm">${coin.name}</span><span class="ml-auto text-gray-400 text-xs font-mono">${coin.symbol.toUpperCase()}</span>`;
                     li.onmousedown = () => {
                         input.value = coin.name;
                         input.dataset.coinId = coin.id;
@@ -766,7 +791,6 @@
                     suggestionsList.appendChild(li);
                 });
                 uiState.show(suggestionsList);
-                console.log("Sugerencias:", matches); // Depuración
             } else {
                 uiState.hide(suggestionsList);
             }
@@ -827,12 +851,15 @@
                 const customData = historicalData[coinId];
                 const athPrice = customData ? customData.athPrice : marketData.ath?.usd;
                 const currentSupply = marketData.circulating_supply || 0;
-                const currentMarketCap = marketData.market_cap?.usd || null;
+                const currentMarketCap = marketData.market_cap?.usd || (currentSupply > 0 ? (marketData.current_price?.usd || 0) * currentSupply : null);
                 const currentPrice = marketData.current_price?.usd || 0;
                 const athDate = marketData.ath_date?.usd ? new Date(marketData.ath_date.usd).toLocaleDateString("es-ES") : "N/A";
 
-                if (!athPrice || !currentMarketCap) {
-                    throw new Error(`Datos de Market Cap o ATH no disponibles en la API para ${apiData.name}.`);
+                if (!athPrice) {
+                    throw new Error(`No hay datos de precio ATH disponibles para ${apiData.name}. Probá buscando con el nombre completo.`);
+                }
+                if (!currentMarketCap) {
+                    throw new Error(`No hay datos de Market Cap disponibles para ${apiData.name}. La moneda puede ser muy nueva o sin datos suficientes.`);
                 }
 
                 const requiredMarketCapForAthPrice = athPrice * currentSupply;
