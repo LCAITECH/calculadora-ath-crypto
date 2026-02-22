@@ -74,6 +74,112 @@
             vertical-align: middle;
             margin-left: 0.2em;
         }
+
+        /* === GLASSMORPHISM CARDS === */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* === NEON GLOW PER COIN === */
+        .glow-btc {
+            box-shadow: 0 0 28px rgba(247, 147, 26, 0.4), 0 0 8px rgba(247, 147, 26, 0.2);
+            border-color: rgba(247, 147, 26, 0.5) !important;
+        }
+
+        .glow-eth {
+            box-shadow: 0 0 28px rgba(98, 126, 234, 0.4), 0 0 8px rgba(98, 126, 234, 0.2);
+            border-color: rgba(98, 126, 234, 0.5) !important;
+        }
+
+        .glow-sol {
+            box-shadow: 0 0 28px rgba(168, 85, 247, 0.4), 0 0 8px rgba(34, 211, 238, 0.2);
+            border-color: rgba(168, 85, 247, 0.5) !important;
+        }
+
+        .glow-bnb {
+            box-shadow: 0 0 28px rgba(243, 186, 47, 0.4), 0 0 8px rgba(243, 186, 47, 0.2);
+            border-color: rgba(243, 186, 47, 0.5) !important;
+        }
+
+        .glow-xrp {
+            box-shadow: 0 0 28px rgba(34, 211, 238, 0.4), 0 0 8px rgba(34, 211, 238, 0.2);
+            border-color: rgba(34, 211, 238, 0.5) !important;
+        }
+
+        .glow-doge {
+            box-shadow: 0 0 28px rgba(196, 148, 29, 0.4), 0 0 8px rgba(196, 148, 29, 0.2);
+            border-color: rgba(196, 148, 29, 0.5) !important;
+        }
+
+        .glow-dot {
+            box-shadow: 0 0 28px rgba(230, 0, 122, 0.4), 0 0 8px rgba(230, 0, 122, 0.2);
+            border-color: rgba(230, 0, 122, 0.5) !important;
+        }
+
+        .glow-default {
+            box-shadow: 0 0 24px rgba(34, 211, 238, 0.25), 0 0 8px rgba(34, 211, 238, 0.15);
+            border-color: rgba(34, 211, 238, 0.35) !important;
+        }
+
+        /* === MASCOT === */
+        .mascot-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.25rem 1.75rem;
+            border-radius: 1rem;
+            margin: 1.25rem auto 0;
+            max-width: 56rem;
+            animation: mascotSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        .mascot-gold {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(245, 158, 11, 0.06));
+            border: 1px solid rgba(251, 191, 36, 0.35);
+        }
+
+        .mascot-silver {
+            background: linear-gradient(135deg, rgba(148, 163, 184, 0.12), rgba(100, 116, 139, 0.06));
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .mascot-copper {
+            background: linear-gradient(135deg, rgba(194, 120, 60, 0.12), rgba(120, 53, 15, 0.06));
+            border: 1px solid rgba(194, 120, 60, 0.35);
+        }
+
+        @keyframes mascotSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-24px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        .mascot-img {
+            width: 85px;
+            height: 115px;
+            object-fit: contain;
+            object-position: center;
+            flex-shrink: 0;
+            filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5));
+        }
+
+        .mascot-text {
+            font-size: 0.97rem;
+            line-height: 1.6;
+            color: #e5e7eb;
+        }
+
+        .mascot-text strong {
+            color: #f9fafb;
+        }
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8517152274411911"
         crossorigin="anonymous"></script>
@@ -82,10 +188,14 @@
 <body class="bg-gray-900 text-white">
 
     <div class="container mx-auto p-4 md:p-8">
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-cyan-400 mb-2">Calculadora de Criptomonedas</h1>
-            <p class="text-gray-400 max-w-2xl mx-auto">¿Puede tu altcoin volver a su máximo histórico? Esta herramienta
-                calcula el market cap necesario considerando la inflación de tokens.</p>
+        <header class="text-center mb-10">
+            <div
+                class="inline-block mb-4 px-4 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold tracking-widest uppercase">
+                LCA ITECH &mdash; Herramientas Cripto Gratuitas</div>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-3">Calculadora <span
+                    class="text-cyan-400">ATH</span> Cripto</h1>
+            <p class="text-gray-400 max-w-2xl mx-auto text-base">¿Puede tu altcoin volver a su máximo histórico? Calculá
+                el market cap necesario, proyecciones y gestión de riesgo &mdash; todo en un lugar.</p>
         </header>
 
         <div class="max-w-xl mx-auto mb-8">
@@ -110,6 +220,7 @@
 
         <div id="result" class="hidden">
         </div>
+        <div id="mascot-container" class="hidden mascot-container"></div>
 
         <div class="mt-12 max-w-4xl mx-auto">
             <h2 class="text-2xl font-semibold text-center mb-6">Ejemplos Populares</h2>
@@ -496,6 +607,13 @@
                 </svg></a>
         </div>
         <p class="text-gray-600 text-xs mt-4">Datos de precios proporcionados por CoinGecko API.</p>
+        <div class="flex justify-center gap-6 mt-4 text-xs text-gray-600">
+            <a href="privacy.html" class="hover:text-gray-400 transition">Política de Privacidad</a>
+            <span class="text-gray-700">|</span>
+            <a href="terms.html" class="hover:text-gray-400 transition">Términos de Uso</a>
+            <span class="text-gray-700">|</span>
+            <a href="about.html" class="hover:text-gray-400 transition">Acerca de LCA ITECH</a>
+        </div>
     </footer>
 
     <script>
@@ -750,6 +868,38 @@
             }
         }
 
+        /* ---- MASCOT HELPERS ---- */
+        function getNeonGlowClass(symbol) {
+            const s = (symbol || '').toLowerCase();
+            const map = { btc: 'glow-btc', eth: 'glow-eth', sol: 'glow-sol', bnb: 'glow-bnb', xrp: 'glow-xrp', doge: 'glow-doge', dot: 'glow-dot' };
+            return map[s] || 'glow-default';
+        }
+
+        function showMascot(pct) {
+            const container = document.getElementById('mascot-container');
+            if (!container) return;
+            let img, text, cls;
+            if (pct <= 0) {
+                img = 'oro.png'; cls = 'mascot-gold';
+                text = '&#128081; <strong>ORO dice:</strong> &ldquo;Ya llegó o ya lo superó. Mantené la clase &mdash; este es institucional. &#x1F4B0;&rdquo;';
+            } else if (pct < 100) {
+                img = 'oro.png'; cls = 'mascot-gold';
+                text = '&#128081; <strong>ORO dice:</strong> &ldquo;Está a tiro. Calculado y sólido. Esta tiene madera para volver.&rdquo;';
+            } else if (pct < 500) {
+                img = 'plata.png'; cls = 'mascot-silver';
+                text = '&#129352; <strong>PLATA dice:</strong> &ldquo;Ehh... posible, pero hay que sudar bastante. Todo puede pasar en cripto.&rdquo;';
+            } else if (pct < 2000) {
+                img = 'plata.png'; cls = 'mascot-silver';
+                text = '&#128552; <strong>PLATA dice:</strong> &ldquo;¡Nooo, boludo! ¡Está lejísimos! ¿Llegamos? No sé... pero la esperanza es lo último que se pierde.&rdquo;';
+            } else {
+                img = 'cobre.png'; cls = 'mascot-copper';
+                text = '&#128296; <strong>COBRE dice:</strong> &ldquo;Relajá, pajarón. Los números son bravos, pero acá estamos calculando igual. Hacé tu gestión de riesgo y seguí.&rdquo;';
+            }
+            container.className = `mascot-container ${cls}`;
+            container.innerHTML = `<img src="${img}" alt="Personaje LCA" class="mascot-img"><p class="mascot-text">${text}</p>`;
+            container.classList.remove('hidden');
+        }
+
         function displayResult(data) {
             const { name, symbol, image, athPrice, currentPrice, athDate, currentMarketCap, requiredMarketCap, percentageIncrease, estimatedPriceAtAthMarketCap, inflationPercentage } = data;
             const increaseColor = percentageIncrease > 0 ? (percentageIncrease < 500 ? 'text-green-400' : (percentageIncrease < 2000 ? 'text-yellow-400' : 'text-red-500')) : 'text-gray-400';
@@ -763,6 +913,11 @@
 
             ui.result.innerHTML = `<div class="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto border border-gray-700"><div class="flex flex-col md:flex-row items-center gap-6 mb-8"><img src="${image || "https://via.placeholder.com/80"}" alt="${name} logo" class="w-20 h-20 rounded-full bg-gray-700 p-2"><div><h2 class="text-3xl font-bold text-white">${name} <span class="text-gray-400 text-2xl">${symbol}</span></h2><p class="text-lg text-gray-300">Precio Actual: <span class="font-semibold text-cyan-400">${formatCurrency(currentPrice, currentPrice > 1 ? 2 : 8)}</span></p></div></div><div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"><div class="bg-gray-700/50 p-4 rounded-lg"><h3 class="text-sm font-medium text-gray-400 mb-1">Máximo Histórico (Precio)</h3><p class="text-2xl font-semibold text-white">${formatCurrency(athPrice, athPrice > 1 ? 2 : 8)}</p><p class="text-xs text-gray-500">Alcanzado el ${athDate}</p></div><div class="bg-gray-700/50 p-4 rounded-lg"><h3 class="text-sm font-medium text-gray-400 mb-1">Market Cap Actual</h3><p class="text-2xl font-semibold text-white">${formatCompact(currentMarketCap)}</p></div></div><div class="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-6 rounded-xl border border-cyan-500/30 text-center"><h3 class="text-lg font-medium text-cyan-300 mb-2">Para alcanzar el PRECIO de ATH, ${name} necesita:</h3><p class="text-5xl font-bold ${increaseColor} mt-4">${formatCompact(requiredMarketCap)}</p><p class="text-base text-gray-300 mb-4 mt-2">de Capitalización de Mercado (Market Cap)</p><div class="mt-4 bg-gray-900/50 rounded-lg p-2 inline-block"><p class="text-xs text-gray-400">Aumento necesario del Market Cap:</p><p class="text-xl font-bold ${increaseColor}">${isFinite(percentageIncrease) ? (percentageIncrease > 0 ? "+" : "") + percentageIncrease.toFixed(2) + "%" : "N/A"}</p></div><p class="text-sm ${increaseColor} mt-4">${message}</p><p class="text-xs text-gray-400 mt-2">${estimatedPriceMessage} ${inflationMessage}</p><button id="shareButton" class="mt-6 bg-cyan-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-cyan-600 transition">Compartir</button></div></div>`;
             uiState.show(ui.result);
+            // Apply neon glow based on coin
+            const cardEl = ui.result.querySelector('div');
+            if (cardEl) { cardEl.classList.add(getNeonGlowClass(symbol), 'glass-card', 'transition-all', 'duration-500'); }
+            // Show mascot
+            showMascot(percentageIncrease);
             const shareButton = document.getElementById("shareButton");
             if (shareButton) shareButton.addEventListener("click", () => { const e = `¡Análisis de ${name} (${symbol}) en la Calculadora ATH!\nPrecio Actual: ${formatCurrency(currentPrice)}\nATH: ${formatCurrency(athPrice)}\nMC Actual: ${formatCompact(currentMarketCap)}\nMC Necesario p/ ATH: ${formatCompact(requiredMarketCap)} (+${percentageIncrease.toFixed(2)}%)\n\n${message}\n\nVer en: https://lca-crypto-calculator.netlify.app/`; navigator.share ? navigator.share({ title: `${name} - Análisis de ATH`, text: e, url: "https://lca-crypto-calculator.netlify.app/" }).catch(e => console.error("Error sharing:", e)) : navigator.clipboard.writeText(e).then(() => alert("¡Resultados copiados al portapapeles!")).catch(e => console.error("Error copying:", e)) });
         }
